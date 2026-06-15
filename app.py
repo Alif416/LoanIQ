@@ -37,8 +37,32 @@ st.markdown("""
 html, body, [class*="css"] { font-family: 'Inter', sans-serif !important; }
 #MainMenu, footer, header, .stDeployButton { visibility: hidden; }
 
-/* Background */
-.stApp { background-color: #F9FAFB; color: #111827; }
+/* Background & global text */
+.stApp { background-color: #F9FAFB !important; color: #111827 !important; }
+
+/* Force all text dark */
+p, span, div, h1, h2, h3, h4, h5, h6, li, a { color: #111827 !important; }
+.stMarkdown, .stText, [data-testid="stMarkdownContainer"] { color: #111827 !important; }
+
+/* Streamlit native widgets text */
+.stSelectbox label, .stNumberInput label,
+.stTextInput label, .stSlider label,
+[data-testid="stWidgetLabel"] { color: #374151 !important; }
+
+/* Selectbox dropdown text */
+.stSelectbox [data-baseweb="select"] span,
+.stSelectbox [data-baseweb="select"] div { color: #111827 !important; }
+
+/* Number input text */
+.stNumberInput input { color: #111827 !important; }
+
+/* st.metric */
+[data-testid="stMetricValue"]  { color: #111827 !important; }
+[data-testid="stMetricLabel"]  { color: #6B7280 !important; }
+[data-testid="stMetricDelta"]  { color: #374151 !important; }
+
+/* Spinner / status */
+.stSpinner p { color: #374151 !important; }
 
 /* Tabs */
 .stTabs [data-baseweb="tab-list"] {
@@ -78,13 +102,68 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif !important; }
 
 /* Inputs */
 .stSelectbox > div > div,
-.stNumberInput > div > div > input {
+.stSelectbox [data-baseweb="select"] > div,
+.stNumberInput > div > div,
+.stNumberInput > div > div > input,
+.stTextInput > div > div,
+.stTextInput > div > div > input,
+[data-baseweb="input"],
+[data-baseweb="select"] {
+    background-color: #FFFFFF !important;
     background: #FFFFFF !important;
-    border: 1px solid #D1D5DB !important;
+    border: 2px solid #9CA3AF !important;
     border-radius: 8px !important;
     color: #111827 !important;
+    font-size: 0.95rem !important;
+    font-weight: 500 !important;
 }
-label { color: #374151 !important; font-size: 0.85rem !important; font-weight: 500 !important; }
+
+/* Input focus state */
+.stSelectbox > div > div:focus-within,
+.stNumberInput > div > div:focus-within,
+[data-baseweb="input"]:focus-within,
+[data-baseweb="select"]:focus-within {
+    border: 2px solid #1D4ED8 !important;
+    outline: none !important;
+}
+
+/* Input text and placeholder */
+.stNumberInput input,
+.stTextInput input {
+    color: #111827 !important;
+    background: #FFFFFF !important;
+    font-weight: 500 !important;
+}
+
+/* Selectbox selected value text */
+[data-baseweb="select"] [data-testid="stMarkdownContainer"],
+[data-baseweb="select"] span,
+[data-baseweb="select"] div { color: #111827 !important; }
+
+/* Selectbox value text inside the control */
+[data-baseweb="select"] > div > div > div { color: #111827 !important; }
+
+/* Dropdown popup list */
+[data-baseweb="popover"],
+[data-baseweb="menu"],
+[data-baseweb="list"],
+ul[data-baseweb="menu"] {
+    background-color: #FFFFFF !important;
+    border: 1px solid #D1D5DB !important;
+}
+[data-baseweb="menu"] li,
+[data-baseweb="list"] li,
+[role="option"] {
+    background-color: #FFFFFF !important;
+    color: #111827 !important;
+}
+[role="option"]:hover,
+[role="option"][aria-selected="true"] {
+    background-color: #EFF6FF !important;
+    color: #1D4ED8 !important;
+}
+
+label { color: #111827 !important; font-size: 0.85rem !important; font-weight: 600 !important; }
 
 /* Cards */
 .card {
@@ -96,12 +175,13 @@ label { color: #374151 !important; font-size: 0.85rem !important; font-weight: 5
     margin-bottom: 16px;
 }
 .card-title {
-    font-size: 0.7rem;
-    font-weight: 700;
+    font-size: 0.7rem !important;
+    font-weight: 700 !important;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #6B7280;
+    color: #374151 !important;
     margin-bottom: 14px;
+    display: block !important;
 }
 
 /* Metric cards */
@@ -113,9 +193,22 @@ label { color: #374151 !important; font-size: 0.85rem !important; font-weight: 5
     text-align: center;
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
 }
-.metric-value { font-size: 1.8rem; font-weight: 700; color: #111827; display: block; }
-.metric-label { font-size: 0.72rem; font-weight: 600; color: #6B7280;
-                text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; }
+.metric-value {
+    font-size: 1.9rem !important;
+    font-weight: 700 !important;
+    color: #111827 !important;
+    display: block !important;
+    line-height: 1.2;
+}
+.metric-label {
+    font-size: 0.72rem !important;
+    font-weight: 600 !important;
+    color: #374151 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 6px;
+    display: block !important;
+}
 
 /* Result banners */
 .result-approved {
@@ -132,7 +225,8 @@ label { color: #374151 !important; font-size: 0.85rem !important; font-weight: 5
     padding: 28px 24px;
     text-align: center;
 }
-.result-title { font-size: 1.5rem; font-weight: 700; margin: 8px 0 4px; }
+.result-title { font-size: 1.5rem !important; font-weight: 700 !important;
+                color: #111827 !important; margin: 8px 0 4px; }
 
 /* Label-value rows */
 .lv-row {
@@ -144,17 +238,18 @@ label { color: #374151 !important; font-size: 0.85rem !important; font-weight: 5
     font-size: 0.88rem;
 }
 .lv-row:last-child { border-bottom: none; }
-.lv-label { color: #6B7280; }
-.lv-val   { color: #111827; font-weight: 600; }
+.lv-label { color: #374151 !important; font-weight: 500 !important; }
+.lv-val   { color: #111827 !important; font-weight: 600 !important; }
 
 /* Section header */
 .sec-hdr {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #111827;
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    color: #111827 !important;
     margin: 28px 0 16px;
     padding-bottom: 10px;
     border-bottom: 2px solid #E5E7EB;
+    display: block !important;
 }
 
 /* Info box */
@@ -163,36 +258,42 @@ label { color: #374151 !important; font-size: 0.85rem !important; font-weight: 5
     border: 1px solid #BFDBFE;
     border-radius: 8px;
     padding: 14px 16px;
-    color: #1E40AF;
-    font-size: 0.88rem;
+    color: #1E3A8A !important;
+    font-size: 0.88rem !important;
     line-height: 1.6;
     margin-top: 10px;
 }
+.info-box b, .info-box strong { color: #1E3A8A !important; }
 .warn-box {
     background: #FFFBEB;
     border: 1px solid #FDE68A;
     border-radius: 8px;
     padding: 14px 16px;
-    color: #92400E;
-    font-size: 0.88rem;
+    color: #92400E !important;
+    font-size: 0.88rem !important;
     line-height: 1.6;
     margin-top: 10px;
 }
+.warn-box b, .warn-box strong { color: #92400E !important; }
 
 /* Badge */
 .badge {
     display: inline-block;
     padding: 3px 10px;
     border-radius: 100px;
-    font-size: 0.7rem;
-    font-weight: 700;
+    font-size: 0.7rem !important;
+    font-weight: 700 !important;
     letter-spacing: 0.06em;
     text-transform: uppercase;
 }
-.badge-blue   { background: #DBEAFE; color: #1D4ED8; }
-.badge-green  { background: #DCFCE7; color: #15803D; }
-.badge-red    { background: #FEE2E2; color: #DC2626; }
-.badge-yellow { background: #FEF9C3; color: #A16207; }
+.badge-blue   { background: #DBEAFE; color: #1D4ED8 !important; }
+.badge-green  { background: #DCFCE7; color: #15803D !important; }
+.badge-red    { background: #FEE2E2; color: #DC2626 !important; }
+.badge-yellow { background: #FEF9C3; color: #A16207 !important; }
+
+/* Tab 2 specific — charts and info note */
+[data-testid="stMarkdownContainer"] p { color: #111827 !important; }
+[data-testid="stMarkdownContainer"] li { color: #111827 !important; }
 
 hr { border: none; border-top: 1px solid #E5E7EB; margin: 24px 0; }
 </style>
@@ -488,7 +589,7 @@ with tab_predict:
                     plot_bgcolor="#FFFFFF",
                     font=dict(family="Inter"),
                 )
-                st.plotly_chart(fig_gauge, use_container_width=True)
+                st.plotly_chart(_styled(fig_gauge), use_container_width=True)
 
             # Risk panel
             with r3:
@@ -562,9 +663,9 @@ with tab_predict:
                     paper_bgcolor="#FFFFFF",
                     plot_bgcolor="#FFFFFF",
                     font=dict(color="#374151", family="Inter"),
-                    legend=dict(bgcolor="#F9FAFB", bordercolor="#E5E7EB"),
+                    legend=_LEGEND,
                 )
-                st.plotly_chart(fig_amort, use_container_width=True)
+                st.plotly_chart(_styled(fig_amort), use_container_width=True)
 
             # ── SHAP Explanation ──────────────────────────────────────────────
             st.markdown("<hr>", unsafe_allow_html=True)
@@ -626,7 +727,7 @@ with tab_predict:
                     yaxis=dict(gridcolor="#F3F4F6"),
                     margin=dict(l=220, r=120),
                 )
-                st.plotly_chart(fig_shap, use_container_width=True)
+                st.plotly_chart(_styled(fig_shap), use_container_width=True)
 
                 # Supporting vs risk factors
                 supporters = shap_df[shap_df["shap_value"] > 0].sort_values(
@@ -667,24 +768,55 @@ with tab_predict:
 def load_analytics_data():
     if not DATA_PATH.exists():
         return None
-    df = pd.read_csv(
-        DATA_PATH,
-        usecols=ANALYTICS_COLS,
-        nrows=50_000,
-        low_memory=False,
+    # Read in 200k-row chunks and collect filtered rows until we have 100k.
+    # This avoids loading the full 1.19 GB file and never reaches the malformed
+    # footer line that causes a C-parser hard error on a full read.
+    WANT = 100_000
+    VALID = {"Fully Paid", "Charged Off"}
+    collected: list[pd.DataFrame] = []
+    total = 0
+    reader = pd.read_csv(
+        DATA_PATH, usecols=ANALYTICS_COLS,
+        chunksize=200_000, low_memory=False, on_bad_lines="skip",
     )
-    df = df[df["loan_status"].isin(["Fully Paid", "Charged Off"])].copy()
+    for chunk in reader:
+        filtered = chunk[chunk["loan_status"].isin(VALID)]
+        if len(filtered):
+            collected.append(filtered)
+            total += len(filtered)
+        if total >= WANT:
+            break
+    if not collected:
+        return None
+    df = pd.concat(collected, ignore_index=True)
+    if len(df) > WANT:
+        df = df.sample(WANT, random_state=42)
     df["target"]  = (df["loan_status"] == "Fully Paid").astype(int)
     df["issue_d"] = pd.to_datetime(df["issue_d"], format="%b-%Y", errors="coerce")
     df["year"]    = df["issue_d"].dt.year
     return df
 
 
+_FONT = dict(color="#111827", family="Inter", size=13)
+_LEGEND = dict(font=dict(color="#111827", size=12), bgcolor="#F9FAFB", bordercolor="#E5E7EB")
 CHART_STYLE = dict(
     paper_bgcolor="#FFFFFF",
     plot_bgcolor="#FFFFFF",
-    font=dict(color="#374151", family="Inter"),
+    font=_FONT,
+    title_font=dict(color="#111827", family="Inter", size=15),
 )
+
+
+def _styled(fig):
+    """Force dark tick/axis-title text on every axis so Streamlit's default template can't override it."""
+    axis_kw = dict(
+        tickfont=dict(color="#111827", size=12),
+        title_font=dict(color="#111827", size=13),
+        linecolor="#D1D5DB",
+    )
+    fig.update_xaxes(**axis_kw)
+    fig.update_yaxes(**axis_kw)
+    return fig
 
 with tab_analytics:
     adf = load_analytics_data()
@@ -740,10 +872,10 @@ with tab_analytics:
             )
             fig.update_layout(
                 title="Loan Outcome Distribution", height=340,
-                legend=dict(bgcolor="#F9FAFB", bordercolor="#E5E7EB"),
+                legend=_LEGEND,
                 **CHART_STYLE,
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(_styled(fig), use_container_width=True)
 
         with r1c2:
             grade_df = (
@@ -770,7 +902,7 @@ with tab_analytics:
                 xaxis=dict(gridcolor="#F3F4F6"),
                 height=340, **CHART_STYLE,
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(_styled(fig), use_container_width=True)
 
         # ── Row 2: interest rate dist + loan amount dist ──────────────────────
         r2c1, r2c2 = st.columns(2)
@@ -793,10 +925,10 @@ with tab_analytics:
                 yaxis=dict(title="Count", gridcolor="#F3F4F6"),
                 xaxis=dict(gridcolor="#F3F4F6"),
                 barmode="overlay", height=320,
-                legend=dict(bgcolor="#F9FAFB", bordercolor="#E5E7EB"),
+                legend=_LEGEND,
                 **CHART_STYLE,
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(_styled(fig), use_container_width=True)
 
         with r2c2:
             fig = go.Figure()
@@ -816,10 +948,10 @@ with tab_analytics:
                 yaxis=dict(title="Count", gridcolor="#F3F4F6"),
                 xaxis=dict(gridcolor="#F3F4F6"),
                 barmode="overlay", height=320,
-                legend=dict(bgcolor="#F9FAFB", bordercolor="#E5E7EB"),
+                legend=_LEGEND,
                 **CHART_STYLE,
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(_styled(fig), use_container_width=True)
 
         # ── Row 3: default by purpose + default by home ownership ─────────────
         st.markdown('<div class="sec-hdr">Key Driver Analysis</div>',
@@ -854,7 +986,7 @@ with tab_analytics:
                 height=400, margin=dict(l=150),
                 **CHART_STYLE,
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(_styled(fig), use_container_width=True)
 
         with r3c2:
             home_df = (
@@ -882,7 +1014,7 @@ with tab_analytics:
                 xaxis=dict(gridcolor="#F3F4F6"),
                 height=400, **CHART_STYLE,
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(_styled(fig), use_container_width=True)
 
         # ── Row 4: DTI boxplot + loans over time ──────────────────────────────
         r4c1, r4c2 = st.columns(2)
@@ -904,10 +1036,10 @@ with tab_analytics:
                 yaxis=dict(title="DTI (%)", gridcolor="#F3F4F6"),
                 xaxis=dict(gridcolor="#F3F4F6"),
                 height=340,
-                legend=dict(bgcolor="#F9FAFB", bordercolor="#E5E7EB"),
+                legend=_LEGEND,
                 **CHART_STYLE,
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(_styled(fig), use_container_width=True)
 
         with r4c2:
             time_df = (
@@ -937,10 +1069,10 @@ with tab_analytics:
                 yaxis2=dict(title="Default Rate (%)", overlaying="y",
                             side="right", gridcolor="#F3F4F6"),
                 barmode="group", height=340,
-                legend=dict(bgcolor="#F9FAFB", bordercolor="#E5E7EB"),
+                legend=_LEGEND,
                 **CHART_STYLE,
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(_styled(fig), use_container_width=True)
 
         st.markdown(
             '<div class="info-box">'
@@ -1015,10 +1147,10 @@ with tab_model:
             title=f"ROC Curve — AUC {auc_val:.4f}",
             xaxis=dict(title="False Positive Rate", gridcolor="#F3F4F6", range=[0, 1]),
             yaxis=dict(title="True Positive Rate", gridcolor="#F3F4F6", range=[0, 1]),
-            legend=dict(bgcolor="#F9FAFB", bordercolor="#E5E7EB"),
+            legend=_LEGEND,
             height=360, **CHART_STYLE,
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(_styled(fig), use_container_width=True)
 
     with mc2:
         # Confusion matrix reconstructed from metrics
@@ -1053,7 +1185,7 @@ with tab_model:
             title="Confusion Matrix — Test Set (2017–2018)",
             height=360, **CHART_STYLE,
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(_styled(fig), use_container_width=True)
 
     # ── Class-level breakdown ────────────────────────────────────────────────
     st.markdown('<div class="sec-hdr">Class-Level Performance</div>',
@@ -1087,10 +1219,10 @@ with tab_model:
             barmode="group",
             yaxis=dict(title="Score", gridcolor="#F3F4F6", range=[0, 1.15]),
             xaxis=dict(gridcolor="#F3F4F6"),
-            legend=dict(bgcolor="#F9FAFB", bordercolor="#E5E7EB"),
+            legend=_LEGEND,
             height=340, **CHART_STYLE,
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(_styled(fig), use_container_width=True)
 
     with cl2:
         st.markdown(card("Why the Gap Between Classes?", [
@@ -1171,7 +1303,7 @@ with tab_model:
             height=540, margin=dict(l=200, r=120),
             **CHART_STYLE,
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(_styled(fig), use_container_width=True)
     else:
         st.info("Place `data/loan.csv` in the project to enable global SHAP importance.")
 

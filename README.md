@@ -209,38 +209,4 @@ CI runs on every push via GitHub Actions (`.github/workflows/test.yml`).
 
 ## License
 
-<<<<<<< HEAD
 MIT
-=======
-Contributions, issues, and feature requests are welcome.
-
-```bash
-git checkout -b feature/your-feature
-# make changes
-git commit -m "feat: your feature"
-git push origin feature/your-feature
-# Open a Pull Request
-```
-
-**Suggested improvements:**
-
-- [ ] Replace LogisticRegression with tuned XGBoost / RandomForest
-- [ ] Dockerise for portable cloud deployment
-- [ ] Add Streamlit session-based prediction history
-- [ ] Add batch prediction from CSV upload
-
----
-
-## 📄 License
-
-This project is licensed under the **MIT License**.
-
----
-
-<div align="center">
-
-
-⭐ Star this repo if you found it useful!
-
-</div>
->>>>>>> 3a9ca04de799e84b370a5853845dfd3db7a8223f
