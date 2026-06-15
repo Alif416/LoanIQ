@@ -1,0 +1,5 @@
+[lint]
+ignore = [
+    "E501",   # line too long — acceptable in Streamlit HTML strings
+    "F841",   # local variable assigned but never used
+]
