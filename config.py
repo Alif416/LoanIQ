@@ -3,7 +3,8 @@ from pathlib import Path
 ROOT          = Path(__file__).parent
 MODEL_PATH    = ROOT / "model" / "loan_model_pipeline.pkl"
 METADATA_PATH = ROOT / "model" / "model_metadata.json"
-DATA_PATH     = ROOT / "data"  / "loan.csv"
+DATA_PATH        = ROOT / "data" / "loan.csv"
+SAMPLE_DATA_PATH = ROOT / "data" / "loan_sample.csv"
 
 ANALYTICS_COLS = [
     "loan_status", "issue_d", "grade", "loan_amnt", "int_rate",

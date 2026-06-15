@@ -15,7 +15,7 @@ import xgboost as xgb
 import streamlit as st
 
 from config import (
-    ANALYTICS_COLS, DATA_PATH,
+    ANALYTICS_COLS, DATA_PATH, SAMPLE_DATA_PATH,
     EMP_LENGTH_OPTIONS, GRADE_OPTIONS, HOME_OWNERSHIP_OPTIONS,
     METADATA_PATH, MODEL_PATH, PURPOSE_OPTIONS, STATE_OPTIONS,
     SUBGRADE_OPTIONS, TERM_OPTIONS, VERIFICATION_OPTIONS,
@@ -382,6 +382,29 @@ with col_title:
     """, unsafe_allow_html=True)
 
 st.markdown("<hr style='margin:12px 0 20px;'>", unsafe_allow_html=True)
+
+# ── Chart helpers (must be defined before any tab uses them) ──────────────────
+_FONT   = dict(color="#111827", family="Inter", size=13)
+_LEGEND = dict(font=dict(color="#111827", size=12), bgcolor="#F9FAFB", bordercolor="#E5E7EB")
+CHART_STYLE = dict(
+    paper_bgcolor="#FFFFFF",
+    plot_bgcolor="#FFFFFF",
+    font=_FONT,
+    title_font=dict(color="#111827", family="Inter", size=15),
+)
+
+
+def _styled(fig):
+    """Force dark tick/axis-title text so Streamlit's Plotly template can't override it."""
+    axis_kw = dict(
+        tickfont=dict(color="#111827", size=12),
+        title_font=dict(color="#111827", size=13),
+        linecolor="#D1D5DB",
+    )
+    fig.update_xaxes(**axis_kw)
+    fig.update_yaxes(**axis_kw)
+    return fig
+
 
 # ── Tabs ──────────────────────────────────────────────────────────────────────
 tab_predict, tab_analytics, tab_model = st.tabs([
@@ -766,57 +789,42 @@ with tab_predict:
 # ─────────────────────────────────────────────────────────────────────────────
 @st.cache_data
 def load_analytics_data():
-    if not DATA_PATH.exists():
-        return None
-    # Read in 200k-row chunks and collect filtered rows until we have 100k.
-    # This avoids loading the full 1.19 GB file and never reaches the malformed
-    # footer line that causes a C-parser hard error on a full read.
-    WANT = 100_000
-    VALID = {"Fully Paid", "Charged Off"}
-    collected: list[pd.DataFrame] = []
-    total = 0
-    reader = pd.read_csv(
-        DATA_PATH, usecols=ANALYTICS_COLS,
-        chunksize=200_000, low_memory=False, on_bad_lines="skip",
-    )
-    for chunk in reader:
-        filtered = chunk[chunk["loan_status"].isin(VALID)]
-        if len(filtered):
-            collected.append(filtered)
-            total += len(filtered)
-        if total >= WANT:
-            break
-    if not collected:
-        return None
-    df = pd.concat(collected, ignore_index=True)
-    if len(df) > WANT:
-        df = df.sample(WANT, random_state=42)
-    df["target"]  = (df["loan_status"] == "Fully Paid").astype(int)
-    df["issue_d"] = pd.to_datetime(df["issue_d"], format="%b-%Y", errors="coerce")
-    df["year"]    = df["issue_d"].dt.year
-    return df
+    # Full dataset (local only — gitignored, 1.19 GB)
+    if DATA_PATH.exists():
+        WANT = 100_000
+        VALID = {"Fully Paid", "Charged Off"}
+        collected: list[pd.DataFrame] = []
+        total = 0
+        reader = pd.read_csv(
+            DATA_PATH, usecols=ANALYTICS_COLS,
+            chunksize=200_000, low_memory=False, on_bad_lines="skip",
+        )
+        for chunk in reader:
+            filtered = chunk[chunk["loan_status"].isin(VALID)]
+            if len(filtered):
+                collected.append(filtered)
+                total += len(filtered)
+            if total >= WANT:
+                break
+        if collected:
+            df = pd.concat(collected, ignore_index=True)
+            if len(df) > WANT:
+                df = df.sample(WANT, random_state=42)
+            df["target"]  = (df["loan_status"] == "Fully Paid").astype(int)
+            df["issue_d"] = pd.to_datetime(df["issue_d"], format="%b-%Y", errors="coerce")
+            df["year"]    = df["issue_d"].dt.year
+            return df
 
+    # Committed 10k-row sample — always available in production
+    if SAMPLE_DATA_PATH.exists():
+        df = pd.read_csv(SAMPLE_DATA_PATH, low_memory=False)
+        df["target"]  = (df["loan_status"] == "Fully Paid").astype(int)
+        df["issue_d"] = pd.to_datetime(df["issue_d"], format="%b-%Y", errors="coerce")
+        df["year"]    = df["issue_d"].dt.year
+        return df
 
-_FONT = dict(color="#111827", family="Inter", size=13)
-_LEGEND = dict(font=dict(color="#111827", size=12), bgcolor="#F9FAFB", bordercolor="#E5E7EB")
-CHART_STYLE = dict(
-    paper_bgcolor="#FFFFFF",
-    plot_bgcolor="#FFFFFF",
-    font=_FONT,
-    title_font=dict(color="#111827", family="Inter", size=15),
-)
+    return None
 
-
-def _styled(fig):
-    """Force dark tick/axis-title text on every axis so Streamlit's default template can't override it."""
-    axis_kw = dict(
-        tickfont=dict(color="#111827", size=12),
-        title_font=dict(color="#111827", size=13),
-        linecolor="#D1D5DB",
-    )
-    fig.update_xaxes(**axis_kw)
-    fig.update_yaxes(**axis_kw)
-    return fig
 
 with tab_analytics:
     adf = load_analytics_data()

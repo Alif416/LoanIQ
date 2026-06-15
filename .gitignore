@@ -1,5 +1,6 @@
-# Dataset — too large for GitHub (1.19 GB)
+# Full dataset — too large for GitHub (1.19 GB)
 data/loan.csv
+# loan_sample.csv is intentionally committed (10k rows, ~1 MB)
 
 # Python
 __pycache__/
